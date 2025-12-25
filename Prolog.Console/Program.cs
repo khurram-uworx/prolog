@@ -1,13 +1,13 @@
-﻿using Prolog;
+using Prolog;
 
-namespace Prolog
+namespace Prolog.Console
 {
     class Program
     {
         static void Main(string[] args)
         {
             // Set up graceful shutdown handling
-            Console.CancelKeyPress += OnCancelKeyPress;
+            System.Console.CancelKeyPress += OnCancelKeyPress;
             
             try
             {
@@ -20,41 +20,41 @@ namespace Prolog
                 // Create and start the interactive shell
                 var shell = new PrologShell(parser, knowledgeBase, queryEngine);
                 
-                Console.WriteLine("Starting Prolog Interpreter...");
+                System.Console.WriteLine("Starting Prolog Interpreter...");
                 shell.Run();
                 
-                Console.WriteLine("Prolog Interpreter terminated normally.");
+                System.Console.WriteLine("Prolog Interpreter terminated normally.");
             }
             catch (OutOfMemoryException ex)
             {
-                Console.WriteLine("Error: Out of memory. The program or query may be too complex.");
-                Console.WriteLine($"Details: {ex.Message}");
+                System.Console.WriteLine("Error: Out of memory. The program or query may be too complex.");
+                System.Console.WriteLine($"Details: {ex.Message}");
                 Environment.Exit(1);
             }
             catch (StackOverflowException ex)
             {
-                Console.WriteLine("Error: Stack overflow. The query may have infinite recursion.");
-                Console.WriteLine($"Details: {ex.Message}");
+                System.Console.WriteLine("Error: Stack overflow. The query may have infinite recursion.");
+                System.Console.WriteLine($"Details: {ex.Message}");
                 Environment.Exit(1);
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine($"Configuration error: {ex.Message}");
-                Console.WriteLine("Please check your system configuration and try again.");
+                System.Console.WriteLine($"Configuration error: {ex.Message}");
+                System.Console.WriteLine("Please check your system configuration and try again.");
                 Environment.Exit(1);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Fatal error: {ex.Message}");
-                Console.WriteLine($"Type: {ex.GetType().Name}");
+                System.Console.WriteLine($"Fatal error: {ex.Message}");
+                System.Console.WriteLine($"Type: {ex.GetType().Name}");
                 
                 if (ex.InnerException != null)
                 {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                    System.Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
                 }
                 
-                Console.WriteLine("\nPress any key to exit...");
-                Console.ReadKey();
+                System.Console.WriteLine("\nPress any key to exit...");
+                System.Console.ReadKey();
                 Environment.Exit(1);
             }
         }
@@ -129,13 +129,13 @@ namespace Prolog
         /// </summary>
         static void OnCancelKeyPress(object? sender, ConsoleCancelEventArgs e)
         {
-            Console.WriteLine("\nReceived interrupt signal. Shutting down gracefully...");
+            System.Console.WriteLine("\nReceived interrupt signal. Shutting down gracefully...");
             e.Cancel = true; // Prevent immediate termination
             
             // Give a moment for cleanup
             System.Threading.Thread.Sleep(100);
             
-            Console.WriteLine("Goodbye!");
+            System.Console.WriteLine("Goodbye!");
             Environment.Exit(0);
         }
     }

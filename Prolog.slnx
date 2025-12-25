@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="Prolog.Console/Prolog.Console.csproj" />
+  <Project Path="Prolog.Samples/Prolog.Samples.csproj" />
   <Project Path="Prolog.Tests/Prolog.Tests.csproj" />
   <Project Path="Prolog/Prolog.csproj" />
 </Solution>
