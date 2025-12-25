@@ -51,10 +51,10 @@ This implementation plan breaks down the Prolog interpreter into discrete coding
   - **Property 1: Parser Round-Trip Consistency**
   - **Validates: Requirements 1.6**
 
-- [ ] 5. Checkpoint - Ensure parsing tests pass
+- [x] 5. Checkpoint - Ensure parsing tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 6. Implement knowledge base for storing clauses
+- [x] 6. Implement knowledge base for storing clauses
   - Create KnowledgeBase class implementing IKnowledgeBase
   - Implement methods for adding clauses and retrieving matching clauses
   - Maintain insertion order for deterministic behavior

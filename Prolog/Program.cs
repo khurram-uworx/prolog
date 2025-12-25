@@ -92,6 +92,45 @@ namespace Prolog
             }
             
             Console.WriteLine("\nPretty printer implemented successfully!");
+            
+            // Test knowledge base
+            Console.WriteLine("\nTesting Knowledge Base:");
+            var knowledgeBase = new KnowledgeBase();
+            
+            // Add some facts and rules
+            var kbParser = new Parser();
+            var program = "parent(tom, bob). parent(bob, alice). grandparent(X, Z) :- parent(X, Y), parent(Y, Z).";
+            var kbParseResult = kbParser.ParseProgram(program);
+            
+            if (kbParseResult.Success)
+            {
+                foreach (var clause in kbParseResult.Clauses)
+                {
+                    knowledgeBase.AddClause(clause);
+                }
+                
+                var stats = knowledgeBase.GetStats();
+                Console.WriteLine($"Knowledge base stats: {stats}");
+                
+                // Test retrieval
+                var parentGoal = new Compound("parent", new Variable("X"), new Variable("Y"));
+                var parentMatches = knowledgeBase.GetMatchingClauses(parentGoal).ToList();
+                Console.WriteLine($"Found {parentMatches.Count} parent clauses:");
+                foreach (var match in parentMatches)
+                {
+                    Console.WriteLine($"  {match}");
+                }
+                
+                var grandparentGoal = new Compound("grandparent", new Variable("X"), new Variable("Z"));
+                var grandparentMatches = knowledgeBase.GetMatchingClauses(grandparentGoal).ToList();
+                Console.WriteLine($"Found {grandparentMatches.Count} grandparent clauses:");
+                foreach (var match in grandparentMatches)
+                {
+                    Console.WriteLine($"  {match}");
+                }
+            }
+            
+            Console.WriteLine("\nKnowledge base implemented successfully!");
         }
     }
 }
