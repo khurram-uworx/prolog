@@ -96,10 +96,10 @@ This implementation plan breaks down the Prolog interpreter into discrete coding
   - **Property 5: Query Solution Completeness**
   - **Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5**
 
-- [ ] 9. Checkpoint - Ensure core engine tests pass
+- [x] 9. Checkpoint - Ensure core engine tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 10. Implement interactive shell interface
+- [x] 10. Implement interactive shell interface
   - Create PrologShell class for user interaction
   - Implement query prompt and result display
   - Handle program loading from text input
