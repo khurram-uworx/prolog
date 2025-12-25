@@ -1,3 +1,7 @@
+This implementation was **Vibe Coded** using KIRO
+
+- This is all [PLASTIC CODE](PLASTIC.md)
+
 # Prolog Interpreter
 
 A minimum Prolog compiler/interpreter/query runner implemented in C# that can parse Prolog programs, build a knowledge base, and execute queries against that knowledge base with unification and backtracking.
@@ -18,7 +22,7 @@ A minimum Prolog compiler/interpreter/query runner implemented in C# that can pa
 ## Project Structure
 
 ```
-├── Prolog/                    # Core interpreter library (class library)
+├── Prolog/                   # Core interpreter library (class library)
 │   ├── Term.cs               # Abstract base class for all Prolog terms
 │   ├── Atom.cs               # Prolog atoms (constants)
 │   ├── Variable.cs           # Prolog variables
@@ -67,7 +71,7 @@ A minimum Prolog compiler/interpreter/query runner implemented in C# that can pa
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/khurram-uworx/prolog.git
 cd prolog
 
 # Build the solution

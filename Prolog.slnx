@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="LICENSE.txt" />
+    <File Path="PLASTIC.md" />
+    <File Path="README.md" />
+  </Folder>
   <Project Path="Prolog.Console/Prolog.Console.csproj" />
   <Project Path="Prolog.Samples/Prolog.Samples.csproj" />
   <Project Path="Prolog.Tests/Prolog.Tests.csproj" />
