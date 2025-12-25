@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Prolog.Tests/Prolog.Tests.csproj" />
+  <Project Path="Prolog/Prolog.csproj" />
+</Solution>
