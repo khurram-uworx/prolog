@@ -122,6 +122,49 @@ namespace Prolog.Tests
             Assert.That(solutions.All(s => s.IsSuccess), Is.True);
         }
 
+        [Test]
+        public void FamilyTree_SiblingQuery_ReturnsCorrectResults()
+        {
+            // Arrange
+            LoadProgramIntoKnowledgeBase(TestPrograms.FamilyTree);
+            var queryResult = parser.ParseQuery("?- sibling(bob, X).");
+            Assert.That(queryResult.Success, Is.True, $"Query should parse successfully: {queryResult.ErrorMessage}");
+
+            // Act
+            var solutions = queryEngine.Solve(queryResult.Query).ToList();
+
+            // Assert
+            Assert.That(solutions.Count, Is.EqualTo(1), "Bob should have 1 sibling");
+            Assert.That(solutions.All(s => s.IsSuccess), Is.True);
+            
+            var siblings = solutions.Select(s => s.Bindings["X"]).Cast<Atom>().Select(a => a.Name).ToList();
+            Assert.That(siblings, Contains.Item("alice"));
+        }
+
+        [Test]
+        public void FamilyTree_SiblingQuery_ExcludesSelf()
+        {
+            // Arrange - Test that the \= operator correctly excludes self from sibling results
+            LoadProgramIntoKnowledgeBase(TestPrograms.FamilyTree);
+            var queryResult = parser.ParseQuery("?- sibling(X, Y).");
+            Assert.That(queryResult.Success, Is.True, $"Query should parse successfully: {queryResult.ErrorMessage}");
+
+            // Act
+            var solutions = queryEngine.Solve(queryResult.Query).ToList();
+
+            // Assert
+            Assert.That(solutions.Count, Is.GreaterThan(0), "Should find sibling relationships");
+            Assert.That(solutions.All(s => s.IsSuccess), Is.True);
+            
+            // Verify that no solution has X = Y (person is not their own sibling)
+            foreach (var solution in solutions)
+            {
+                var x = ((Atom)solution.Bindings["X"]).Name;
+                var y = ((Atom)solution.Bindings["Y"]).Name;
+                Assert.That(x, Is.Not.EqualTo(y), $"Person {x} should not be their own sibling");
+            }
+        }
+
         #endregion
 
         #region Simple Rules Integration Tests

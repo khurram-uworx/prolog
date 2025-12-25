@@ -35,6 +35,7 @@ female(helen).
 
 % Rules for derived relationships
 grandparent(X, Z) :- parent(X, Y), parent(Y, Z).
+sibling(X, Y) :- parent(Z, X), parent(Z, Y), X \= Y.
 father(X, Y) :- parent(X, Y), male(X).
 mother(X, Y) :- parent(X, Y), female(X).
 grandfather(X, Z) :- grandparent(X, Z), male(X).

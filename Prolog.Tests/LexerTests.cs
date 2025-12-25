@@ -70,6 +70,23 @@ namespace Prolog.Tests
         }
 
         [Test]
+        public void Lexer_TokenizesNotEqualOperator()
+        {
+            var lexer = new Lexer("X \\= Y");
+            var tokens = lexer.Tokenize();
+
+            var nonWhitespace = tokens.Where(t => t.Type != TokenType.Whitespace && t.Type != TokenType.EndOfFile).ToList();
+
+            Assert.That(nonWhitespace.Count, Is.EqualTo(3));
+            Assert.That(nonWhitespace[0].Type, Is.EqualTo(TokenType.Variable));
+            Assert.That(nonWhitespace[0].Value, Is.EqualTo("X"));
+            Assert.That(nonWhitespace[1].Type, Is.EqualTo(TokenType.NotEqual));
+            Assert.That(nonWhitespace[1].Value, Is.EqualTo("\\="));
+            Assert.That(nonWhitespace[2].Type, Is.EqualTo(TokenType.Variable));
+            Assert.That(nonWhitespace[2].Value, Is.EqualTo("Y"));
+        }
+
+        [Test]
         public void Lexer_TokenizesComments()
         {
             var lexer = new Lexer("% this is a comment\natom");

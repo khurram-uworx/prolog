@@ -15,6 +15,7 @@ namespace Prolog
         LeftParen,      // (
         RightParen,     // )
         Rule,           // :-
+        NotEqual,       // \=
         
         // Special
         Query,          // ?-
