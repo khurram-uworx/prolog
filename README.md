@@ -8,8 +8,9 @@ A minimum Prolog compiler/interpreter/query runner implemented in C# that can pa
 - ✅ **Lexical Analysis**: Tokenization of Prolog source code with proper syntax recognition
 - ✅ **Parser**: Recursive descent parser for facts, rules, and queries
 - ✅ **Pretty Printer**: Round-trip consistent formatting back to valid Prolog syntax
-- 🚧 **Knowledge Base**: Storage and retrieval of facts and rules (in progress)
-- 🚧 **Query Engine**: Unification and backtracking for query resolution (planned)
+- ✅ **Knowledge Base**: Storage and retrieval of facts and rules with efficient indexing
+- ✅ **Unification Engine**: Pattern matching with variable binding and occurs check
+- 🚧 **Query Engine**: Unification and backtracking for query resolution (in progress)
 - 🚧 **Interactive Shell**: REPL interface for interactive Prolog programming (planned)
 
 ## Project Structure
@@ -24,13 +25,21 @@ A minimum Prolog compiler/interpreter/query runner implemented in C# that can pa
 │   ├── Lexer.cs           # Lexical analyzer
 │   ├── Clause.cs          # Prolog clauses (facts and rules)
 │   ├── Parser.cs          # Recursive descent parser
+│   ├── ParseResult.cs     # Parser result wrapper
 │   ├── PrettyPrinter.cs   # Formats internal structures back to Prolog
+│   ├── IKnowledgeBase.cs  # Knowledge base interface
+│   ├── KnowledgeBase.cs   # Knowledge base implementation
+│   ├── IUnificationEngine.cs # Unification engine interface
+│   ├── UnificationEngine.cs  # Unification algorithm implementation
+│   ├── UnificationResult.cs  # Unification result wrapper
 │   └── Program.cs         # Main console application
 ├── Prolog.Tests/          # NUnit test suite
 │   ├── TermTests.cs       # Tests for term system
 │   ├── LexerTests.cs      # Tests for lexical analysis
 │   ├── ParserTests.cs     # Tests for parsing
-│   └── PrettyPrinterTests.cs # Tests for pretty printing
+│   ├── PrettyPrinterTests.cs # Tests for pretty printing
+│   ├── KnowledgeBaseTests.cs # Tests for knowledge base
+│   └── UnificationEngineTests.cs # Tests for unification
 └── README.md              # This file
 ```
 
@@ -60,20 +69,38 @@ dotnet run --project Prolog
 
 ### Usage
 
-Currently, the interpreter supports parsing and pretty-printing Prolog programs:
+Currently, the interpreter supports parsing, pretty-printing, knowledge base operations, and unification:
 
 ```csharp
 var parser = new Parser();
 var prettyPrinter = new PrettyPrinter();
+var knowledgeBase = new KnowledgeBase();
+var unificationEngine = new UnificationEngine();
 
 // Parse a Prolog program
 var result = parser.ParseProgram("parent(tom, bob). grandparent(X, Z) :- parent(X, Y), parent(Y, Z).");
 
 if (result.Success)
 {
+    // Add clauses to knowledge base
+    foreach (var clause in result.Clauses)
+    {
+        knowledgeBase.AddClause(clause);
+    }
+    
     // Pretty print the parsed clauses
     var formatted = prettyPrinter.FormatProgram(result.Clauses);
     Console.WriteLine(formatted);
+    
+    // Query the knowledge base
+    var goal = new Compound("parent", new Variable("X"), new Variable("Y"));
+    var matches = knowledgeBase.GetMatchingClauses(goal);
+    
+    // Test unification
+    var term1 = new Compound("parent", new Variable("X"), new Atom("bob"));
+    var term2 = new Compound("parent", new Atom("tom"), new Atom("bob"));
+    var unifyResult = unificationEngine.Unify(term1, term2);
+    Console.WriteLine($"Unification: {unifyResult}");
 }
 
 // Parse a query
@@ -119,7 +146,9 @@ The interpreter follows a classic compiler architecture:
 ```
 Prolog Source → Lexer → Tokens → Parser → AST → Pretty Printer → Prolog Source
                                     ↓
-                              Knowledge Base → Query Engine → Solutions
+                              Knowledge Base ← Unification Engine
+                                    ↓              ↓
+                              Query Engine → Solutions (planned)
 ```
 
 ### Components
@@ -128,15 +157,18 @@ Prolog Source → Lexer → Tokens → Parser → AST → Pretty Printer → Pro
 2. **Parser**: Recursive descent parser that builds an Abstract Syntax Tree (AST) from tokens
 3. **Term System**: Polymorphic hierarchy representing all Prolog data structures
 4. **Pretty Printer**: Formats internal structures back to valid Prolog syntax with round-trip consistency
+5. **Knowledge Base**: Efficient storage and retrieval of clauses with functor/arity indexing
+6. **Unification Engine**: Implements Prolog unification algorithm with occurs check and variable binding
 
 ## Testing
 
 The project uses NUnit for testing with comprehensive coverage:
 
-- **53 total tests** covering all components
+- **89 total tests** covering all components
 - **Property-based testing** with FsCheck for comprehensive validation
 - **Round-trip tests** ensuring parse → print → parse consistency
 - **Error handling tests** for robust error reporting
+- **Unification tests** validating pattern matching correctness
 
 Run tests with:
 ```bash
@@ -150,13 +182,13 @@ dotnet test
 - [x] Lexical analysis with full Prolog syntax support
 - [x] Recursive descent parser for facts, rules, and queries
 - [x] Pretty printer with round-trip consistency
-- [x] Comprehensive test suite (53 tests)
+- [x] Knowledge base with efficient functor/arity indexing
+- [x] Unification engine with occurs check and variable binding
+- [x] Comprehensive test suite (89 tests)
 - [x] Error handling and reporting
 
 ### In Progress 🚧
-- [ ] Knowledge base implementation
-- [ ] Unification engine
-- [ ] Query engine with backtracking
+- [ ] Query engine with backtracking algorithm
 - [ ] Interactive shell interface
 
 ### Planned 📋

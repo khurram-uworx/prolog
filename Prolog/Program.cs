@@ -131,6 +131,36 @@ namespace Prolog
             }
             
             Console.WriteLine("\nKnowledge base implemented successfully!");
+            
+            // Test unification engine
+            Console.WriteLine("\nTesting Unification Engine:");
+            var unificationEngine = new UnificationEngine();
+            
+            // Test basic unification
+            var atom1 = new Atom("tom");
+            var atom2 = new Atom("tom");
+            var result1 = unificationEngine.Unify(atom1, atom2);
+            Console.WriteLine($"Unifying {atom1} with {atom2}: {result1}");
+            
+            // Test variable unification
+            var varX = new Variable("X");
+            var atomBob = new Atom("bob");
+            var result2 = unificationEngine.Unify(varX, atomBob);
+            Console.WriteLine($"Unifying {varX} with {atomBob}: {result2}");
+            
+            // Test compound unification
+            var compound1 = new Compound("parent", new Variable("X"), new Atom("bob"));
+            var compound2 = new Compound("parent", new Atom("tom"), new Atom("bob"));
+            var result3 = unificationEngine.Unify(compound1, compound2);
+            Console.WriteLine($"Unifying {compound1} with {compound2}: {result3}");
+            
+            // Test failed unification
+            var atom3 = new Atom("alice");
+            var atom4 = new Atom("charlie");
+            var result4 = unificationEngine.Unify(atom3, atom4);
+            Console.WriteLine($"Unifying {atom3} with {atom4}: {result4}");
+            
+            Console.WriteLine("\nUnification engine implemented successfully!");
         }
     }
 }
