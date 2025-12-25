@@ -85,6 +85,11 @@ namespace Prolog
                 return CreateTwoCharToken(TokenType.Query, "?-");
             }
 
+            if (current == '\\' && Peek() == '=')
+            {
+                return CreateTwoCharToken(TokenType.NotEqual, "\\=");
+            }
+
             // Atoms and variables
             if (char.IsLetter(current) || current == '_')
             {

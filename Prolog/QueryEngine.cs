@@ -87,6 +87,21 @@ namespace Prolog
         /// </summary>
         IEnumerable<Solution> SolveGoal(Term goal, Dictionary<string, Term> bindings)
         {
+            // Handle built-in predicates first
+            if (goal is Compound compound)
+            {
+                switch (compound.Functor)
+                {
+                    case "\\=" when compound.Arity == 2:
+                        // Not unifiable predicate
+                        foreach (var solution in SolveNotEqual(compound.Arguments[0], compound.Arguments[1], bindings))
+                        {
+                            yield return solution;
+                        }
+                        yield break;
+                }
+            }
+
             // Get all clauses that could potentially match this goal
             var matchingClauses = knowledgeBase.GetMatchingClauses(goal);
 
@@ -132,6 +147,26 @@ namespace Prolog
                 // Don't yield a failure solution here - let the caller handle it
                 // This allows compound queries to backtrack properly
             }
+        }
+
+        /// <summary>
+        /// Handles the \= (not unifiable) built-in predicate
+        /// </summary>
+        IEnumerable<Solution> SolveNotEqual(Term term1, Term term2, Dictionary<string, Term> bindings)
+        {
+            // Substitute variables with their bindings
+            var substitutedTerm1 = term1.Substitute(bindings);
+            var substitutedTerm2 = term2.Substitute(bindings);
+
+            // Check if the terms can be unified
+            var canUnify = unificationEngine.CanUnify(substitutedTerm1, substitutedTerm2, bindings);
+
+            if (!canUnify)
+            {
+                // Terms cannot be unified, so \= succeeds
+                yield return Solution.Success(bindings);
+            }
+            // If terms can be unified, \= fails (no solutions yielded)
         }
 
         /// <summary>

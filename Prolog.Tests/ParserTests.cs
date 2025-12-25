@@ -221,5 +221,40 @@ namespace Prolog.Tests
             Assert.That(compound.Functor, Is.EqualTo("fact"));
             Assert.That(compound.Arity, Is.EqualTo(0));
         }
+
+        [Test]
+        public void Parser_ParsesNotEqualOperator()
+        {
+            var result = parser.ParseProgram("sibling(X, Y) :- parent(Z, X), parent(Z, Y), X \\= Y.");
+            
+            Assert.That(result.Success, Is.True);
+            Assert.That(result.Clauses.Count, Is.EqualTo(1));
+            
+            var clause = result.Clauses[0];
+            Assert.That(clause.IsFact, Is.False);
+            Assert.That(clause.Body.Count, Is.EqualTo(3));
+            
+            // The third goal should be the not-equal constraint
+            var notEqualGoal = clause.Body[2] as Compound;
+            Assert.That(notEqualGoal, Is.Not.Null);
+            Assert.That(notEqualGoal.Functor, Is.EqualTo("\\="));
+            Assert.That(notEqualGoal.Arity, Is.EqualTo(2));
+            Assert.That(notEqualGoal.Arguments[0].ToString(), Is.EqualTo("X"));
+            Assert.That(notEqualGoal.Arguments[1].ToString(), Is.EqualTo("Y"));
+        }
+
+        [Test]
+        public void Parser_ParsesNotEqualInQuery()
+        {
+            var result = parser.ParseQuery("?- X \\= Y.");
+            
+            Assert.That(result.Success, Is.True);
+            Assert.That(result.Query, Is.Not.Null);
+            
+            var compound = result.Query as Compound;
+            Assert.That(compound, Is.Not.Null);
+            Assert.That(compound.Functor, Is.EqualTo("\\="));
+            Assert.That(compound.Arity, Is.EqualTo(2));
+        }
     }
 }

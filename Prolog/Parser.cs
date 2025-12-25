@@ -133,6 +133,21 @@ namespace Prolog
 
         Term ParseTerm()
         {
+            var left = ParsePrimaryTerm();
+            
+            // Check for infix operators
+            if (Check(TokenType.NotEqual))
+            {
+                var operatorToken = Advance();
+                var right = ParsePrimaryTerm();
+                return new Compound(operatorToken.Value, new List<Term> { left, right });
+            }
+            
+            return left;
+        }
+
+        Term ParsePrimaryTerm()
+        {
             if (Check(TokenType.Atom))
             {
                 var atomToken = Advance();
