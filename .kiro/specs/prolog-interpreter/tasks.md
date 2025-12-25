@@ -129,7 +129,7 @@ This implementation plan breaks down the Prolog interpreter into discrete coding
   - Test with realistic Prolog programs
   - _Requirements: All requirements integration_
 
-- [ ] 13. Final checkpoint - Ensure all tests pass
+- [x] 13. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes
